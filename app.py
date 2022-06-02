@@ -49,10 +49,6 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, nullable=False)
     seeking_description = db.Column(db.String(500), nullable=False)
     image_link = db.Column(db.String(500), nullable=False)
-    # past_shows = db.Column(db.PickleType)
-    # upcoming_shows = db.Column(db.PickleType)
-    # past_shows_count = db.Column(db.Integer, default=0, nullable=False)
-    # upcoming_shows_count = db.Column(db.Integer, default=0, nullable=False)
     venue_shows = db.relationship('Show', backref='venue', lazy=True, cascade='all, delete')
 
     def __repr__(self):
@@ -73,10 +69,6 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(300))
     image_link = db.Column(db.String(500))
-    # past_shows = db.Column(db.PickleType)
-    # upcoming_shows = db.Column(db.PickleType)
-    # past_shows_count = db.Column(db.Integer, default=0)
-    # upcoming_shows_count = db.Column(db.Integer, default=0)
     artist_shows = db.relationship('Show', backref='artist', lazy=True, cascade='all, delete')
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
@@ -87,13 +79,8 @@ class Show(db.Model):
   __tablename__ = 'show'
 
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-  # name = db.Column(db.String(100), nullable=False)
   venue_id = db.Column(db.Integer, db.ForeignKey('venue.id', ondelete='CASCADE'), nullable=False)
-  # venue_name = db.Column(db.String(150))
   artist_id = db.Column(db.Integer, db.ForeignKey('artist.id', ondelete='CASCADE'), nullable=False)
-  # artist_name = db.Column(db.String(150), nullable=False)
-  # artist_image_link = db.Column(db.String(200), nullable=False)
-  # date = db.Column(db.DateTime, nullable=False)
   start_time = db.Column(db.DateTime, nullable=False)
 
 #----------------------------------------------------------------------------#
@@ -128,10 +115,6 @@ def venues():
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
   # show_venues = Venue.query.with_entities(func.count(Venue.id), Venue.city, Venue.state).group_by(Venue.city, Venue.state).all()
   show_venues = db.session.query(Venue.city, Venue.state).distinct()
-
-  # if venues == False:
-  #   flash('There are no venues available now. Check again later', 'Error')
-  #   return render_template('pages/venues.html')
 
   venues_arr = []
 
